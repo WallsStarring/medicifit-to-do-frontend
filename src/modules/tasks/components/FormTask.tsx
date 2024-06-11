@@ -28,6 +28,7 @@ export const FormTask = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editedTask, setEditedTask] = useState<string>("");
+  // @ts-ignore
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [openSnack, setOpenSnack] = useState(false);
@@ -179,7 +180,7 @@ export const FormTask = () => {
   };
   const action = (
     <Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
+      <Button color="secondary" onClick={handleClose}>
         UNDO
       </Button>
       <IconButton
