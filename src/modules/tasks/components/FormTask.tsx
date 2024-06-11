@@ -172,7 +172,6 @@ export const FormTask = () => {
           {editIndex === index ? (
             <>
               <Input
-                autoFocus
                 value={editedTask}
                 onChange={(e) => setEditedTask(e.target.value)}
               />
