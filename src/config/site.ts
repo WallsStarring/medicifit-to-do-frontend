@@ -60,7 +60,8 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/WallsStarring/medicifit-to-do-frontend",
+    githubFrontend: "https://github.com/WallsStarring/medicifit-to-do-frontend",
+    githubBackend: "https://github.com/WallsStarring/medicifit-to-do-backend",
     twitter: "",
     docs: "https://nextui-docs-v2.vercel.app",
     discord: "https://discord.gg/9b6yyZKmH4",

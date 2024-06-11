@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Input } from "@nextui-org/input";
 import { Spacer } from "@nextui-org/spacer";
 import { Button } from "@nextui-org/button";
@@ -10,8 +10,12 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
+import io from "socket.io-client";
+import { IconButton, Snackbar } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
-import { BASE_URL } from "@/config/api.ts";
+import { BASE_URL, SOCKET_URL } from "@/config/api.ts";
+const socket = io(SOCKET_URL);
 
 interface ITask {
   id: number;
@@ -26,11 +30,23 @@ export const FormTask = () => {
   const [editedTask, setEditedTask] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   useEffect(() => {
     fetchTasks();
   }, []);
+  // subscribe to notifications
+  useEffect(() => {
+    socket.on("notification", (data) => {
+      setNotificationMessage(data.message);
+      setOpenSnack(true);
+    });
 
+    return () => {
+      socket.off("notification");
+    };
+  }, []);
   const addTask = async () => {
     try {
       if (!task) {
@@ -151,8 +167,41 @@ export const FormTask = () => {
     }
   };
 
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+  const action = (
+    <Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        aria-label="close"
+        color="inherit"
+        size="small"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
+
   return (
     <>
+      <Snackbar
+        action={action}
+        autoHideDuration={6000}
+        message={notificationMessage}
+        open={openSnack}
+        onClose={handleClose}
+      />
       <h1>To-Do List</h1>
       <div className={"flex items-center mb-2"}>
         <Input value={task} onChange={(e) => setTask(e.target.value)} />
